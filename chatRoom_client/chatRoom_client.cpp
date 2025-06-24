@@ -44,7 +44,7 @@ ENV g_env;
 int g_isConnected = DISCONNECTED;
 BOOL isInRoom = FALSE;
 int g_Fnum;
-char UserName[20] = "";
+char g_UserName[20] = "";
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("Socket");
 HWND g_hWndMain;
@@ -178,25 +178,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		switch (LOWORD(wParam)) {
 		case ID_NAMEBTN:					//유저이름 확정 버튼
-			GetWindowText(g_hNameEdit, UserName, 20);
-			//UserName 길이가 0인 경우
-			if (lstrlen(UserName) == 0) {
+			GetWindowText(g_hNameEdit, g_UserName, 20);
+			//g_UserName 길이가 0인 경우
+			if (lstrlen(g_UserName) == 0) {
 				MessageBox(hWnd, "이름을 작성하세요", NULL, MB_OK);
 			}
-			//UserName 길이가 0이 아닌 경우
+			//g_UserName 길이가 0이 아닌 경우
 			else {
-				wsprintf(strMsg, "%s 로 확정하시겠습니까?", UserName);
+				wsprintf(strMsg, "%s 로 확정하시겠습니까?", g_UserName);
 				mReturn = MessageBox(hWnd, strMsg, "확인", MB_OKCANCEL);
 				if (mReturn == IDCANCEL) {
 					SetWindowText(g_hNameEdit, "");
-					lstrcpy(UserName, "");
+					lstrcpy(g_UserName, "");
 				}
 			}
 			break;
 		case ID_CONBTN:						//서버연결,해제 버튼
 			if (g_isConnected == DISCONNECTED) {	//서버 연결시
-				//UserName이 설정되었는지를 확인
-				if (lstrlen(UserName) != 0) {	//UserName을 설정한 경우
+				//g_UserName이 설정되었는지를 확인
+				if (lstrlen(g_UserName) != 0) {	//g_UserName을 설정한 경우
 					g_env.clientsock = socket(AF_INET, SOCK_STREAM, 0);
 
 					//IP,Port 입력한 값 g_szIpAddress, 
@@ -212,12 +212,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 					hThread = CreateThread(NULL, 0, RecvThreadFunc, &g_env.clientsock, 0, &ThreadID);
 					if (!nReturn) {				//잘 연결된 경우
 						//서버에 유저등록요청(R)	"R유저이름"
-						wsprintf(strMsg, "R%s", UserName);
+						wsprintf(strMsg, "R%s", g_UserName);
 						nReturn = send(g_env.clientsock, strMsg, sizeof(strMsg), 0);
 						//서버에 채팅방리스트요청(I)	"I"
 						Sleep(5);
 						nReturn = send(g_env.clientsock, "I", sizeof("I"), 0);
-						//서버접속 -> 접속해제, IP,Port,UserName readOnly로 전환,확정버튼 Hide
+						//서버접속 -> 접속해제, IP,Port,g_UserName readOnly로 전환,확정버튼 Hide
 						SetWindowText(g_hConBtn, "접속해제");
 						SendMessage(g_hIPEdit, EM_SETREADONLY, (WPARAM)TRUE, 0);
 						SendMessage(g_hPortEdit, EM_SETREADONLY, (WPARAM)TRUE, 0);
@@ -227,7 +227,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 				}
-				else {							//UserName을 설정하지 않은 경우
+				else {							//g_UserName을 설정하지 않은 경우
 					MessageBox(hWnd, "먼저 닉네임을 설정하세요", NULL, MB_OK);
 				}
 			}

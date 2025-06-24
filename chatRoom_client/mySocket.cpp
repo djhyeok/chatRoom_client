@@ -16,7 +16,7 @@ enum CONNECT {
 extern ENV g_env;
 extern int g_isConnected, isInRoom, g_Fnum;
 extern HWND g_hRoomList, g_hWndMain, g_hConBtn, g_hIPEdit, g_hPortEdit, g_hNameEdit, g_hNameBtn, g_hRoomNameStatic, g_hRoomNumStatic, g_hMsgList;
-extern char UserName[20];
+extern char g_UserName[20];
 /*
 void cutMsg(char* msg,char* buffer): buffer에서 메시지 잘라서 msg에 담음
 */
@@ -196,7 +196,7 @@ DWORD WINAPI RecvThreadFunc(LPVOID Param) {
 			SendMessage(g_hNameEdit, EM_SETREADONLY, (WPARAM)FALSE, 0);
 			ShowWindow(g_hNameBtn, SW_SHOW);
 			isInRoom = FALSE;
-			lstrcpy(UserName, "");
+			lstrcpy(g_UserName, "");
 			ExitThread(0);
 		}
 		else {								//비정상적으로 연결이 끊긴경우
@@ -212,7 +212,7 @@ DWORD WINAPI RecvThreadFunc(LPVOID Param) {
 			ShowWindow(g_hNameBtn, SW_SHOW);
 			isInRoom = FALSE;
 			InitWindow();
-			lstrcpy(UserName, "");
+			lstrcpy(g_UserName, "");
 			ExitThread(0);
 		}
 	}
