@@ -43,7 +43,6 @@ unsigned short g_uPort;
 ENV g_env;
 int g_isConnected = DISCONNECTED;
 BOOL isInRoom = FALSE;
-int g_Fnum;
 char g_UserName[20] = "";
 HINSTANCE g_hInst;
 LPCTSTR lpszClass = TEXT("Socket");
@@ -107,7 +106,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		InitCommonControls();
 		g_hWndMain = hWnd;
-		g_Fnum = 100;
 		nReturn = WSAStartup(WORD(2.0), &g_env.wsadata);
 
 		////접속 버튼생성////
@@ -239,6 +237,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 					nReturn = send(g_env.clientsock, strMsg, sizeof(strMsg), 0);
 				}
 				//서버접속 -> 접속해제, IP,Port,UserName readOnly로 전환,확정버튼 Hide
+				ListView_DeleteAllItems(g_hRoomList);
 				SetWindowText(g_hConBtn, "서버접속");
 				SendMessage(g_hIPEdit, EM_SETREADONLY, (WPARAM)FALSE, 0);
 				SendMessage(g_hPortEdit, EM_SETREADONLY, (WPARAM)FALSE, 0);

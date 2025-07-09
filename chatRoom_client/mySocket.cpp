@@ -14,7 +14,7 @@ enum CONNECT {
 };
 
 extern ENV g_env;
-extern int g_isConnected, isInRoom, g_Fnum;
+extern int g_isConnected, isInRoom;
 extern HWND g_hRoomList, g_hWndMain, g_hConBtn, g_hIPEdit, g_hPortEdit, g_hNameEdit, g_hNameBtn, g_hRoomNameStatic, g_hRoomNumStatic, g_hMsgList;
 extern char g_UserName[20];
 /*
@@ -110,7 +110,7 @@ DWORD WINAPI RecvThreadFunc(LPVOID Param) {
 				//현재 얼마나 받았는지 확인할 변수
 				recvSize = 0;
 				//파일명 설정
-				wsprintf(tempStr, "FILE%d.bmp", g_Fnum++);
+				lstrcpy(tempStr, "FILE100.bmp");
 				//저장할 파일 생성
 				fp = fopen(tempStr, "wb");
 				//다 받을때까지 recv받은 파일내용 1024단위로 쪼개서 새 파일에 저장
